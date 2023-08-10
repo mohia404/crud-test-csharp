@@ -1,8 +1,8 @@
 ﻿using Phonebook.Domain.Common.Models;
-using Phonebook.Domain.Phonebook.Entities;
-using Phonebook.Domain.Phonebook.ValueObjects;
+using Phonebook.Domain.Phonebooks.Entities;
+using Phonebook.Domain.Phonebooks.ValueObjects;
 
-namespace Phonebook.Domain.Phonebook;
+namespace Phonebook.Domain.Phonebooks;
 
 public class Phonebook : AggregateRoot<PhonebookId, Guid>
 {

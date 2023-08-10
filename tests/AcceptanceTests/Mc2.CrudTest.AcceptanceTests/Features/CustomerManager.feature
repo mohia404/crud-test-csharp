@@ -61,7 +61,7 @@ Scenario: Operator delete customer that exists
 		| mohammad     | amini     | 1995/22/05    | 09158955560  | mohia1374@gmail.com | 12345678            |
 		| amin         | mohammadi | 1996/22/05    | 09158955561  | mohia1375@gmail.com | 22345678            |
 		| mohammadamin | mohammadi | 1997/22/05    | 09158955562  | mohia1376@gmail.com | 32345678            |
-	When i try to delete customer with email mohia1374@gmail.com
+	When i try to delete customer with email 'mohia1374@gmail.com'
 	Then the customers should be
 		| first_name   | last_name | date_of_birth | phone_number | email               | bank_account_number |
 		| amin         | mohammadi | 1996/22/05    | 09158955561  | mohia1375@gmail.com | 22345678            |
@@ -74,7 +74,7 @@ Scenario: Operator delete customer that do not exists
 		| mohammad     | amini     | 1995/22/05    | 09158955560  | mohia1374@gmail.com | 12345678            |
 		| amin         | mohammadi | 1996/22/05    | 09158955561  | mohia1375@gmail.com | 22345678            |
 		| mohammadamin | mohammadi | 1997/22/05    | 09158955562  | mohia1376@gmail.com | 32345678            |
-	When i try to delete customer with id 'mohia1377@gmail.com'
+	When i try to delete customer with email 'mohia1377@gmail.com'
 	Then i should get customer do not exist error
 
 @read
@@ -98,7 +98,7 @@ Scenario: Operator get existing customer
 		| mohammad     | amini     | 1995/22/05    | 09158955560  | mohia1374@gmail.com | 12345678            |
 		| amin         | mohammadi | 1996/22/05    | 09158955561  | mohia1375@gmail.com | 22345678            |
 		| mohammadamin | mohammadi | 1997/22/05    | 09158955562  | mohia1376@gmail.com | 32345678            |
-	When i try to get customer with email mohia1374@gmail.com
+	When i try to get customer with email 'mohia1374@gmail.com'
 	Then i should get following customer
 		| first_name   | last_name | date_of_birth | phone_number | email               | bank_account_number |
 		| mohammad     | amini     | 1995/22/05    | 09158955560  | mohia1374@gmail.com | 12345678            |

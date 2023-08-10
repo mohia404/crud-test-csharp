@@ -1,6 +1,6 @@
 ﻿using Phonebook.Domain.Common.Models;
 
-namespace Phonebook.Domain.Phonebook.ValueObjects;
+namespace Phonebook.Domain.Phonebooks.ValueObjects;
 
 public sealed class PhonebookId : AggregateRootId<Guid>
 {
@@ -21,7 +21,5 @@ public sealed class PhonebookId : AggregateRootId<Guid>
         yield return Value;
     }
 
-#pragma warning disable CS8618
     private PhonebookId() { }
-#pragma warning restore CS8618
 }

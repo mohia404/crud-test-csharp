@@ -1,7 +1,7 @@
 ﻿using Phonebook.Domain.Common.Models;
-using Phonebook.Domain.Phonebook.ValueObjects;
+using Phonebook.Domain.Phonebooks.ValueObjects;
 
-namespace Phonebook.Domain.Phonebook.Entities;
+namespace Phonebook.Domain.Phonebooks.Entities;
 
 public class Customer : Entity<CustomerId>
 {

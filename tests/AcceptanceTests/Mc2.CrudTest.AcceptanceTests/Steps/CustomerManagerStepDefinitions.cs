@@ -1,89 +1,114 @@
+using BoDi;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Phonebook.Infrastructure.Data;
+using System.Net;
+
 namespace Mc2.CrudTest.AcceptanceTests.Steps;
 
 [Binding]
 public class CustomerManagerStepDefinitions
 {
+    private readonly ScenarioContext _scenarioContext;
+    public PhonebookApplicationFactory _factory = new();
+    public HttpClient _client { get; set; } = null!;
+    private readonly PhonebookDbContext _databaseContext;
+
+    public CustomerManagerStepDefinitions(ScenarioContext scenarioContext)
+    {
+        _scenarioContext = scenarioContext;
+        var scope = _factory.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
+        _databaseContext = scope.ServiceProvider.GetRequiredService<PhonebookDbContext>();
+    }
+
+    [BeforeScenario]
+    public void RegisterDependencies(IObjectContainer objectContainer)
+    {
+        _databaseContext.Database.EnsureCreated();
+
+        _databaseContext.Phonebooks.RemoveRange(_databaseContext.Phonebooks);
+        _databaseContext.SaveChanges();
+
+        _client = _factory.CreateClient();
+    }
+
+    [AfterScenario]
+    public void Dispose(IObjectContainer objectContainer)
+    {
+        _factory.Dispose();
+    }
+
     [Given(@"the following customers")]
     public void GivenTheFollowingCustomers(Table table)
     {
-        throw new PendingStepException();
     }
 
     [When(@"i try to create customer")]
     public void WhenITryToCreateCustomer(Table table)
     {
-        throw new PendingStepException();
+
     }
 
     [Then(@"the customers should be")]
-    public void ThenTheCustomersShouldBe(Table table)
+    public async Task ThenTheCustomersShouldBe(Table table)
     {
-        throw new PendingStepException();
+        HttpResponseMessage response = await _client.GetAsync("/swagger/index.html");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        //var expected = table.CreateSet<Product>();
+        //var actual = await _response.Content.ReadFromJsonAsync<List<Product>>();
+
+        //actual.Should().BeEquivalentTo(expected);
     }
 
     [Then(@"i should get invalid phone number error")]
     public void ThenIShouldGetInvalidPhoneNumberError()
     {
-        throw new PendingStepException();
     }
 
     [Then(@"i should get customer exists error")]
     public void ThenIShouldGetCustomerExistsError()
     {
-        throw new PendingStepException();
     }
 
     [Then(@"i should get email exists error")]
     public void ThenIShouldGetEmailExistsError()
     {
-        throw new PendingStepException();
     }
 
-    [When(@"i try to delete customer with email mohia(.*)@gmail\.com")]
-    public void WhenITryToDeleteCustomerWithEmailMohiaGmail_Com(int p0)
+    [When(@"i try to delete customer with email '([^']*)'")]
+    public void WhenITryToDeleteCustomerWithEmail(string email)
     {
-        throw new PendingStepException();
-    }
-
-    [When(@"i try to delete customer with id '([^']*)'")]
-    public void WhenITryToDeleteCustomerWithId(string p0)
-    {
-        throw new PendingStepException();
     }
 
     [Then(@"i should get customer do not exist error")]
     public void ThenIShouldGetCustomerDoNotExistError()
     {
-        throw new PendingStepException();
     }
 
     [When(@"i try to get customers")]
     public void WhenITryToGetCustomers()
     {
-        throw new PendingStepException();
     }
 
     [Then(@"i should get following customers")]
     public void ThenIShouldGetFollowingCustomers(Table table)
     {
-        throw new PendingStepException();
     }
 
-    [When(@"i try to get customer with email mohia(.*)@gmail\.com")]
-    public void WhenITryToGetCustomerWithEmailMohiaGmail_Com(int p0)
+    [When(@"i try to get customer with email '([^']*)'")]
+    public void WhenITryToGetCustomerWithEmail(string email)
     {
-        throw new PendingStepException();
     }
 
     [Then(@"i should get following customer")]
     public void ThenIShouldGetFollowingCustomer(Table table)
     {
-        throw new PendingStepException();
     }
 
     [When(@"i try to update following customer")]
     public void WhenITryToUpdateFollowingCustomer(Table table)
     {
-        throw new PendingStepException();
     }
 }

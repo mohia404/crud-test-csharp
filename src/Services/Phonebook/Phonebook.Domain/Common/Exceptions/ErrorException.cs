@@ -1,4 +1,6 @@
-﻿namespace Phonebook.Domain.Common.Exceptions;
+﻿using ErrorOr;
+
+namespace Phonebook.Domain.Common.Exceptions;
 
 public abstract class ErrorException : Exception
 {

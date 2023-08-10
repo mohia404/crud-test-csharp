@@ -1,6 +1,6 @@
 ﻿using Phonebook.Domain.Common.Models;
 
-namespace Phonebook.Domain.Phonebook.ValueObjects;
+namespace Phonebook.Domain.Phonebooks.ValueObjects;
 
 public sealed class CustomerId : ValueObject
 {
