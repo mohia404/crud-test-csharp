@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using BoDi;
 using CustomerManager.Contracts.Customers;
 using CustomerManager.Domain.Companies;
@@ -8,6 +9,7 @@ using Mc2.CrudTest.AcceptanceTests.Drivers.RowObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 using TechTalk.SpecFlow.Assist;
 
@@ -70,21 +72,26 @@ public class CustomerManagerStepDefinitions
     }
 
     [When(@"i try to create customer")]
-    public void WhenITryToCreateCustomer(Table table)
+    public async Task WhenITryToCreateCustomer(Table table)
     {
-
+        CustomerRow givenCustomer = table.CreateInstance<CustomerRow>();
+        _scenarioContext["response"] = await _client.PostAsync($"/api/companies/{_companyId.Value}/customers", ToJson(givenCustomer));
     }
 
     [Then(@"the customers should be")]
     public async Task ThenTheCustomersShouldBe(Table table)
     {
-        HttpResponseMessage response = await _client.GetAsync("/swagger/index.html");
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        Company company = await _databaseContext.Companies.FirstAsync(x => x.Id == _companyId);
 
-        //var expected = table.CreateSet<Product>();
-        //var actual = await _response.Content.ReadFromJsonAsync<List<Product>>();
+        List<CustomerRow> expectedCustomers = table.CreateSet<CustomerRow>().ToList();
+        List<CustomerResult> customers = company.Customers.Select(givenCustomer => new CustomerResult(givenCustomer.Firstname,
+            givenCustomer.Lastname,
+            givenCustomer.DateOfBirth,
+            givenCustomer.PhoneNumber.ToString(),
+            givenCustomer.Email,
+            givenCustomer.BankAccountNumber)).ToList();
 
-        //actual.Should().BeEquivalentTo(expected);
+        customers.Should().BeEquivalentTo(expectedCustomers);
     }
 
     [Then(@"i should get invalid phone number error")]
@@ -154,5 +161,10 @@ public class CustomerManagerStepDefinitions
         {
             PropertyNameCaseInsensitive = true
         });
+    }
+
+    private static StringContent ToJson(object obj)
+    {
+        return new StringContent(JsonSerializer.Serialize(obj), Encoding.UTF8, "application/json");
     }
 }

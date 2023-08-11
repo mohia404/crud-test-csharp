@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using CustomerManager.Application.Companies.Queries.GetAllCustomers;
+using CustomerManager.Application.Companies.Commands.AddNewCustomer;
 
 namespace CustomerManager.API.Controllers;
 
@@ -28,6 +29,24 @@ public class CustomerController : ApiController
 
         return result.Match(
             Ok,
+            Problem);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateNewCustomer(Guid companyId, CustomerRequest request, CancellationToken cancellationToken)
+    {
+        AddNewCustomerCommand command = new(CompanyId: CompanyId.Create(companyId),
+            request.Firstname,
+            request.Lastname,
+            request.DateOfBirth,
+            request.PhoneNumber,
+            request.Email,
+            request.BankAccountNumber);
+
+        ErrorOr<Created> result = await _mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            _ => NoContent(),
             Problem);
     }
 }
