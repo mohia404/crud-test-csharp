@@ -3,7 +3,7 @@
   public class CompanyConfiguration
   {
     public const string ConfigName = "companyConfigs";
-
-    public string CompanyId { get; set; } = null!;
+    public const string CompanyId = "64F3573B-D584-4C36-9119-906E756C24CE";
+    public const string ApiEndpoint = "https://localhost:7010";
   }
 }

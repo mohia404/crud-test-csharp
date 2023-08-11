@@ -18,15 +18,11 @@ namespace Mc2.CrudTest.Presentation.Client
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            CompanyConfiguration baseUrlConfig = new();
-            builder.Configuration.Bind(CompanyConfiguration.ConfigName, baseUrlConfig);
-            builder.Services.AddScoped(sp => baseUrlConfig);
-
             builder.Services.AddMappings();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddHttpClient("backend",
-                client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+                client => client.BaseAddress = new Uri(CompanyConfiguration.ApiEndpoint));
 
             builder.Services.AddBlazoredToast();
             builder.Services.AddSyncfusionBlazor();

@@ -47,6 +47,8 @@ catch (Exception ex)
     logger.LogError(ex, "An error occurred seeding the DB.");
 }
 
+app.UseCors(corsPolicy);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
