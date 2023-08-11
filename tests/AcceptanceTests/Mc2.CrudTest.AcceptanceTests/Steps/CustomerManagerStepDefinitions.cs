@@ -1,9 +1,15 @@
 using BoDi;
+using CustomerManager.Contracts.Customers;
+using CustomerManager.Domain.Companies;
+using CustomerManager.Domain.Companies.ValueObjects;
+using CustomerManager.Infrastructure.Data;
 using FluentAssertions;
+using Mc2.CrudTest.AcceptanceTests.Drivers.RowObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
-using CustomerManager.Infrastructure.Data;
+using System.Text.Json;
+using TechTalk.SpecFlow.Assist;
 
 namespace Mc2.CrudTest.AcceptanceTests.Steps;
 
@@ -11,37 +17,56 @@ namespace Mc2.CrudTest.AcceptanceTests.Steps;
 public class CustomerManagerStepDefinitions
 {
     private readonly ScenarioContext _scenarioContext;
-    public CustomerManagerApplicationFactory _factory = new();
-    public HttpClient _client { get; set; } = null!;
+    private readonly CustomerManagerApplicationFactory _factory = new();
+    private readonly HttpClient _client;
     private readonly CustomerManagerDbContext _databaseContext;
+
+    private readonly CompanyId _companyId;
 
     public CustomerManagerStepDefinitions(ScenarioContext scenarioContext)
     {
+        _companyId = CompanyId.Create(new Guid("64F3573B-D584-4C36-9119-906E756C24CE"));
         _scenarioContext = scenarioContext;
-        var scope = _factory.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
+        _client = _factory.CreateClient();
+        IServiceScope scope = _factory.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
         _databaseContext = scope.ServiceProvider.GetRequiredService<CustomerManagerDbContext>();
     }
 
     [BeforeScenario]
-    public void RegisterDependencies(IObjectContainer objectContainer)
+    public async Task RegisterDependencies(IObjectContainer objectContainer)
     {
-        _databaseContext.Database.EnsureCreated();
+        await _databaseContext.Database.EnsureCreatedAsync();
 
         _databaseContext.Companies.RemoveRange(_databaseContext.Companies);
-        _databaseContext.SaveChanges();
-
-        _client = _factory.CreateClient();
+        await _databaseContext.Companies.AddAsync(
+            Company.Create(_companyId));
+        await _databaseContext.SaveChangesAsync();
     }
 
     [AfterScenario]
-    public void Dispose(IObjectContainer objectContainer)
+    public async Task Dispose(IObjectContainer objectContainer)
     {
-        _factory.Dispose();
+        await _factory.DisposeAsync();
     }
 
     [Given(@"the following customers")]
-    public void GivenTheFollowingCustomers(Table table)
+    public async Task GivenTheFollowingCustomers(Table table)
     {
+        Company company = await _databaseContext.Companies.FirstAsync(x => x.Id == _companyId);
+
+        List<CustomerRow> givenCustomers = table.CreateSet<CustomerRow>().ToList();
+
+        foreach (CustomerRow givenCustomer in givenCustomers)
+        {
+            company.AddNewCustomer(givenCustomer.Firstname,
+                givenCustomer.Lastname,
+                givenCustomer.DateOfBirth,
+                ulong.Parse(givenCustomer.PhoneNumber),
+                givenCustomer.Email,
+                givenCustomer.BankAccountNumber);
+        }
+
+        await _databaseContext.SaveChangesAsync();
     }
 
     [When(@"i try to create customer")]
@@ -88,13 +113,24 @@ public class CustomerManagerStepDefinitions
     }
 
     [When(@"i try to get customers")]
-    public void WhenITryToGetCustomers()
+    public async Task WhenITryToGetCustomers()
     {
+        _scenarioContext["response"] = await _client.GetAsync($"/api/companies/{_companyId.Value}/customers");
     }
 
     [Then(@"i should get following customers")]
-    public void ThenIShouldGetFollowingCustomers(Table table)
+    public async Task ThenIShouldGetFollowingCustomers(Table table)
     {
+        HttpResponseMessage? response = _scenarioContext["response"] as HttpResponseMessage;
+        response.Should().NotBeNull();
+        response!.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        List<CustomerResult>? responseCustomers = await FromHttpResponseMessageAsync<List<CustomerResult>>(response);
+        responseCustomers.Should().NotBeNull();
+
+        List<CustomerRow> expectedCustomers = table.CreateSet<CustomerRow>().ToList();
+
+        responseCustomers!.Should().BeEquivalentTo(expectedCustomers);
     }
 
     [When(@"i try to get customer with email '([^']*)'")]
@@ -110,5 +146,13 @@ public class CustomerManagerStepDefinitions
     [When(@"i try to update following customer")]
     public void WhenITryToUpdateFollowingCustomer(Table table)
     {
+    }
+
+    private static async Task<T?> FromHttpResponseMessageAsync<T>(HttpResponseMessage result)
+    {
+        return JsonSerializer.Deserialize<T>(await result.Content.ReadAsStringAsync(), new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
     }
 }
