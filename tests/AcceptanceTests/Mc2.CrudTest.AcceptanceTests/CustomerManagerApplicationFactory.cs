@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using CustomerManager.Infrastructure.Data;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mc2.CrudTest.AcceptanceTests;
 
@@ -11,30 +12,21 @@ public class CustomerManagerApplicationFactory : WebApplicationFactory<CustomerM
     {
         string hostname = $"http://localhost:{GeneratePort()}";
 
-        Dictionary<string, string> configurationValues = new()
-        {
-            { "DefaultConnection", "Data Source=localhost,1433;User ID=sa;Password=yourStrong(!)Password;Initial Catalog=CustomerDbTest;TrustServerCertificate=True" }
-        };
-
-        IConfigurationRoot configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(configurationValues!)
-            .Build();
-
         builder.UseUrls(hostname);
 
-        builder
-            .UseConfiguration(configuration);
-    }
-
-    protected override IHost CreateHost(IHostBuilder builder)
-    {
-        // Add mock/test services to the builder here
         builder.ConfigureServices(services =>
         {
+            ServiceDescriptor? dbContextDescriptor = services.SingleOrDefault(
+                d => d.ServiceType ==
+                     typeof(DbContextOptions<CustomerManagerDbContext>));
 
+            services.Remove(dbContextDescriptor);
+
+            services.AddDbContext<CustomerManagerDbContext>(options =>
+            {
+                options.UseSqlServer("Data Source=localhost,1433;User ID=sa;Password=yourStrong(!)Password;Initial Catalog=CustomerManagerDbTest;TrustServerCertificate=True");
+            });
         });
-
-        return base.CreateHost(builder);
     }
 
     private static int GeneratePort()
