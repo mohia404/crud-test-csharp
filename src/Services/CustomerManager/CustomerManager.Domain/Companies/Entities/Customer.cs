@@ -8,11 +8,11 @@ public class Customer : Entity<CustomerId>
     public string Firstname { get; }
     public string Lastname { get; }
     public DateTime DateOfBirth { get; }
-    public string PhoneNumber { get; }
+    public ulong PhoneNumber { get; }
     public string Email { get; }
     public string BankAccountNumber { get; }
 
-    private Customer(CustomerId id, string firstname, string lastname, DateTime dateOfBirth, string phoneNumber, string email, string bankAccountNumber) : base(id)
+    private Customer(CustomerId id, string firstname, string lastname, DateTime dateOfBirth, ulong phoneNumber, string email, string bankAccountNumber) : base(id)
     {
         Firstname = firstname;
         Lastname = lastname;
@@ -22,7 +22,7 @@ public class Customer : Entity<CustomerId>
         BankAccountNumber = bankAccountNumber;
     }
 
-    public static Customer Create(string firstname, string lastname, DateTime dateOfBirth, string phoneNumber, string email, string bankAccountNumber)
+    public static Customer Create(string firstname, string lastname, DateTime dateOfBirth, ulong phoneNumber, string email, string bankAccountNumber)
     {
         return new Customer(CustomerId.Create(Guid.NewGuid()), firstname, lastname, dateOfBirth, phoneNumber, email, bankAccountNumber);
     }

@@ -14,15 +14,18 @@
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.8" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Phonebook.Contracts\CustomerManager.Contracts.csproj" />
-		<ProjectReference Include="..\Phonebook.Infrastructure\CustomerManager.Infrastructure.csproj" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="Mc2.CrudTest.AcceptanceTests" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\CustomerManager.Infrastructure\CustomerManager.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

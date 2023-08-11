@@ -20,7 +20,7 @@ public class Company : AggregateRoot<CompanyId, Guid>
         return new Company(id);
     }
 
-    public void AddNewCustomer(string firstname, string lastname, DateTime dateOfBirth, string phoneNumber, string email, string bankAccountNumber)
+    public void AddNewCustomer(string firstname, string lastname, DateTime dateOfBirth, ulong phoneNumber, string email, string bankAccountNumber)
     {
         if (_customers.Any(x => x.Firstname == firstname && x.Lastname == lastname && x.DateOfBirth == dateOfBirth))
             throw new NameAndBirthAlreadyExistedException();

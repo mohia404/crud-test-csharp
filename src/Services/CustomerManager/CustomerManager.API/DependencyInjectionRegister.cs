@@ -1,5 +1,8 @@
 using CustomerManager.API.Common.Errors;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Reflection;
+using Mapster;
+using MapsterMapper;
 
 namespace CustomerManager.API;
 
@@ -13,6 +16,18 @@ public static class DependencyInjectionRegister
 
         services.AddControllers();
 
+        services.AddMappings();
+
+        return services;
+    }
+
+    public static IServiceCollection AddMappings(this IServiceCollection services)
+    {
+        TypeAdapterConfig config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(Assembly.GetExecutingAssembly());
+
+        services.AddSingleton(config);
+        services.AddScoped<IMapper, ServiceMapper>();
         return services;
     }
 }

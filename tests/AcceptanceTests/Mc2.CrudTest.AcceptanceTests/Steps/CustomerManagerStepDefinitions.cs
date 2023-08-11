@@ -27,7 +27,7 @@ public class CustomerManagerStepDefinitions
     {
         _databaseContext.Database.EnsureCreated();
 
-        _databaseContext.Phonebooks.RemoveRange(_databaseContext.Phonebooks);
+        _databaseContext.Companies.RemoveRange(_databaseContext.Companies);
         _databaseContext.SaveChanges();
 
         _client = _factory.CreateClient();

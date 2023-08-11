@@ -16,7 +16,7 @@ public class CompanyConfig : IEntityTypeConfiguration<Company>
     private static void ConfigurePhonebooksTable(EntityTypeBuilder<Company> builder)
     {
         builder
-            .ToTable("companies");
+            .ToTable("Companies");
 
         builder
             .HasKey(s => s.Id);
@@ -32,24 +32,50 @@ public class CompanyConfig : IEntityTypeConfiguration<Company>
     private static void ConfigureCustomersTable(EntityTypeBuilder<Company> builder)
     {
         builder
-            .OwnsMany(s => s.Customers, boxBuilder =>
+            .OwnsMany(s => s.Customers, customerBuilder =>
             {
-                boxBuilder
+                customerBuilder
                     .ToTable("Customers");
 
-                boxBuilder
+                customerBuilder
                     .Property(d => d.Id)
                     .ValueGeneratedNever()
                     .HasConversion(
                         id => id.Value,
                         value => CustomerId.Create(value));
 
-                boxBuilder
+                customerBuilder
                     .WithOwner()
                     .HasForeignKey("CompanyId");
 
 
-                boxBuilder.HasKey("Id", "CompanyId");
+                customerBuilder.HasKey("Id", "CompanyId");
+
+                customerBuilder
+                    .Property(x=>x.Firstname)
+                    .HasMaxLength(100);
+
+                customerBuilder
+                    .Property(x => x.Lastname)
+                    .HasMaxLength(100);
+
+                customerBuilder
+                    .Property(x => x.DateOfBirth)
+                    .HasColumnType("datetime");
+
+                customerBuilder
+                    .Property(x => x.PhoneNumber)
+                    .HasColumnType("bigint");
+
+                customerBuilder
+                    .Property(x => x.Email)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                customerBuilder
+                    .Property(x => x.BankAccountNumber)
+                    .HasMaxLength(24)
+                    .IsUnicode(false);
             });
 
         builder.Metadata

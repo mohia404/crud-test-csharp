@@ -10,7 +10,9 @@ public abstract class AggregateRoot<TId, TIdType> : Entity<TId>
         Id = id;
     }
 
+#pragma warning disable CS8618
     protected AggregateRoot()
     {
     }
+#pragma warning restore CS8618
 }

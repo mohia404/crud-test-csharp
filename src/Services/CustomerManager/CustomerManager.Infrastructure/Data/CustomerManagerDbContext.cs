@@ -16,7 +16,7 @@ public class CustomerManagerDbContext : DbContext
         _publishDomainEventsInterceptor = publishDomainEventsInterceptor;
     }
 
-    public DbSet<Company> Phonebooks { get; set; } = null!;
+    public DbSet<Company> Companies { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

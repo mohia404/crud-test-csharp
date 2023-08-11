@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace CustomerManager.API.Controllers;
 
 [ApiController]
-[Authorize]
 public class ApiController : ControllerBase
 {
     [AllowAnonymous]

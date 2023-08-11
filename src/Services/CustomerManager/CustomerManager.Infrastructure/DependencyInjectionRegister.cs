@@ -1,5 +1,7 @@
-﻿using CustomerManager.Infrastructure.Data;
+﻿using CustomerManager.Application.Common.Interfaces.Persistence;
+using CustomerManager.Infrastructure.Data;
 using CustomerManager.Infrastructure.Data.Interceptors;
+using CustomerManager.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,9 +28,10 @@ public static class DependencyInjectionRegister
         });
 
         services.AddScoped<PublishDomainEventsInterceptor>();
-        services.AddScoped<CustomerManagerDbContext>();
-
-        // Repositories
+        services.AddScoped<CustomerManagerDbContextSeed>();
+        
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ICompanyRepository, CompanyRepository>();
 
         return services;
     }

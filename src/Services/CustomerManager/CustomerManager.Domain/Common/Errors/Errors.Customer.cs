@@ -17,5 +17,9 @@ public static partial class Errors
         public static Error EmailAlreadyExisted => Error.Conflict(
             code: "Customer.EmailConflict",
             description: "Another customer with given email already existed.");
+
+        public static Error InvalidPhoneNumber => Error.Validation(
+            code: "Customer.InvalidPhoneNumber",
+            description: "Customer phone number is not valid.");
     }
 }

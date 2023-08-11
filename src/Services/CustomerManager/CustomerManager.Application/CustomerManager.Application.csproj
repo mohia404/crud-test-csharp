@@ -11,10 +11,14 @@
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+		<PackageReference Include="Mapster" Version="7.3.0" />
+		<PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
 	</ItemGroup>
 
+
 	<ItemGroup>
-		<ProjectReference Include="..\Phonebook.Domain\CustomerManager.Domain.csproj" />
+	  <ProjectReference Include="..\CustomerManager.Contracts\CustomerManager.Contracts.csproj" />
+	  <ProjectReference Include="..\CustomerManager.Domain\CustomerManager.Domain.csproj" />
 	</ItemGroup>
 
 </Project>

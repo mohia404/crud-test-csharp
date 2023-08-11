@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\src\Services\Phonebook\Phonebook.API\CustomerManager.API.csproj" />
+      <ProjectReference Include="..\..\..\src\Services\CustomerManager\CustomerManager.API\CustomerManager.API.csproj" />
     </ItemGroup>
 
 </Project>

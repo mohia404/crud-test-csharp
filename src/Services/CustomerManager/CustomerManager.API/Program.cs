@@ -1,6 +1,7 @@
 using CustomerManager.API;
 using CustomerManager.Application;
 using CustomerManager.Infrastructure;
+using CustomerManager.Infrastructure.Data;
 
 const string corsPolicy = "CorsPolicy";
 
@@ -28,7 +29,23 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
+
+IWebHostEnvironment? hostEnvironment = app.Services.GetService<IWebHostEnvironment>();
+ILoggerFactory loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
+ILogger logger = loggerFactory.CreateLogger(nameof(app));
+logger.LogInformation("Starting in environment {hostEnvironment}", hostEnvironment?.EnvironmentName);
+try
+{
+    using IServiceScope scope = app.Services.CreateScope();
+    IServiceProvider services = scope.ServiceProvider;
+    CustomerManagerDbContextSeed seedService = services.GetRequiredService<CustomerManagerDbContextSeed>();
+    await seedService.SeedAsync();
+}
+catch (Exception ex)
+{
+    logger.LogError(ex, "An error occurred seeding the DB.");
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
