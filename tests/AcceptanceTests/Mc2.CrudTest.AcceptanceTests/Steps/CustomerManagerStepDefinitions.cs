@@ -1,10 +1,10 @@
-using System.Diagnostics.CodeAnalysis;
 using BoDi;
 using CustomerManager.Contracts.Customers;
 using CustomerManager.Domain.Companies;
 using CustomerManager.Domain.Companies.ValueObjects;
 using CustomerManager.Infrastructure.Data;
 using FluentAssertions;
+using Mc2.CrudTest.AcceptanceTests.Drivers.Http;
 using Mc2.CrudTest.AcceptanceTests.Drivers.RowObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,8 +12,6 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using TechTalk.SpecFlow.Assist;
-using System.Linq;
-using Mc2.CrudTest.AcceptanceTests.Drivers.Http;
 
 namespace Mc2.CrudTest.AcceptanceTests.Steps;
 
@@ -80,26 +78,6 @@ public class CustomerManagerStepDefinitions
         _scenarioContext["response"] = await _client.PostAsync($"/api/companies/{_companyId.Value}/customers", ToJson(givenCustomer));
     }
 
-    [Then(@"the customers should be")]
-    public async Task ThenTheCustomersShouldBe(Table table)
-    {
-        HttpResponseMessage? response = _scenarioContext["response"] as HttpResponseMessage;
-        response.Should().NotBeNull();
-        response!.StatusCode.Should().Be(HttpStatusCode.NoContent);
-
-        Company company = await _databaseContext.Companies.FirstAsync(x => x.Id == _companyId);
-
-        List<CustomerRow> expectedCustomers = table.CreateSet<CustomerRow>().ToList();
-        List<CustomerResult> customers = company.Customers.Select(givenCustomer => new CustomerResult(givenCustomer.Firstname,
-            givenCustomer.Lastname,
-            givenCustomer.DateOfBirth,
-            givenCustomer.PhoneNumber.ToString(),
-            givenCustomer.Email,
-            givenCustomer.BankAccountNumber)).ToList();
-
-        customers.Should().BeEquivalentTo(expectedCustomers);
-    }
-
     [Then(@"i should get invalid phone number error")]
     public async Task ThenIShouldGetInvalidPhoneNumberError()
     {
@@ -134,13 +112,20 @@ public class CustomerManagerStepDefinitions
     }
 
     [When(@"i try to delete customer with email '([^']*)'")]
-    public void WhenITryToDeleteCustomerWithEmail(string email)
+    public async Task WhenITryToDeleteCustomerWithEmail(string email)
     {
+        _scenarioContext["response"] = await _client.DeleteAsync($"/api/companies/{_companyId.Value}/customers/{email}");
     }
 
     [Then(@"i should get customer do not exist error")]
-    public void ThenIShouldGetCustomerDoNotExistError()
+    public async Task ThenIShouldGetCustomerDoNotExistError()
     {
+        HttpResponseMessage? response = _scenarioContext["response"] as HttpResponseMessage;
+
+        response.Should().NotBeNull();
+        response!.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+        await CheckErrorAsync(response, "Customer.NotFound");
     }
 
     [When(@"i try to get customers")]
@@ -165,19 +150,35 @@ public class CustomerManagerStepDefinitions
     }
 
     [When(@"i try to get customer with email '([^']*)'")]
-    public void WhenITryToGetCustomerWithEmail(string email)
+    public async Task WhenITryToGetCustomerWithEmail(string email)
     {
+        _scenarioContext["response"] = await _client.GetAsync($"/api/companies/{_companyId.Value}/customers/{email}");
     }
 
     [Then(@"i should get following customer")]
-    public void ThenIShouldGetFollowingCustomer(Table table)
+    public async Task ThenIShouldGetFollowingCustomer(Table table)
     {
+        HttpResponseMessage? response = _scenarioContext["response"] as HttpResponseMessage;
+        response.Should().NotBeNull();
+        response!.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        CustomerResult? responseCustomers = await FromHttpResponseMessageAsync<CustomerResult>(response);
+        responseCustomers.Should().NotBeNull();
+
+        CustomerRow expectedCustomers = table.CreateInstance<CustomerRow>();
+
+        responseCustomers!.Should().BeEquivalentTo(expectedCustomers);
     }
 
-    [When(@"i try to update following customer")]
-    public void WhenITryToUpdateFollowingCustomer(Table table)
+    [When(@"i try to update following customer with email '([^']*)'")]
+    public async Task WhenITryToUpdateFollowingCustomerWithEmail(string email, Table table)
     {
+        CustomerRow givenCustomer = table.CreateInstance<CustomerRow>();
+        _scenarioContext["response"] = await _client.PutAsync($"/api/companies/{_companyId.Value}/customers/{email}", ToJson(givenCustomer));
     }
+
+
+    #region Private Methods
 
     private static async Task<T?> FromHttpResponseMessageAsync<T>(HttpResponseMessage result)
     {
@@ -190,21 +191,6 @@ public class CustomerManagerStepDefinitions
     private static StringContent ToJson(object obj)
     {
         return new StringContent(JsonSerializer.Serialize(obj), Encoding.UTF8, "application/json");
-    }
-
-    private async Task CheckResponseErrorAsync(HttpResponseMessage result, ProblemDetailsWithErrors problemDetailsWithErrors)
-    {
-        JsonSerializerOptions options = new()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        };
-
-        string output = await result.Content.ReadAsStringAsync();
-
-        ProblemDetailsWithErrors? error = JsonSerializer.Deserialize<ProblemDetailsWithErrors>(output, options);
-
-        error.Should().NotBeNull();
-        error!.Should().BeEquivalentTo(problemDetailsWithErrors);
     }
 
     private static async Task CheckValidationErrorAsync(HttpResponseMessage response, string error)
@@ -236,4 +222,6 @@ public class CustomerManagerStepDefinitions
         validationError.Should().NotBeNull();
         validationError!.ErrorCodes.Should().Contain(error);
     }
+
+    #endregion
 }

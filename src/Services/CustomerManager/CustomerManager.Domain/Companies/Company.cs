@@ -32,6 +32,32 @@ public class Company : AggregateRoot<CompanyId, Guid>
         _customers.Add(customer);
     }
 
+    public void UpdateCustomer(CustomerId customerId, string firstname, string lastname, DateTime dateOfBirth, ulong phoneNumber, string email, string bankAccountNumber)
+    {
+        Customer? customer = _customers.FirstOrDefault(x => x.Id == customerId);
+
+        if (customer is null)
+            throw new CustomerNotExistException();
+
+        if (_customers.Any(x => x.Firstname == firstname && x.Lastname == lastname && x.DateOfBirth == dateOfBirth && x.Id != customerId))
+            throw new NameAndBirthAlreadyExistedException();
+
+        if (_customers.Any(x => x.Email == email && x.Id != customerId))
+            throw new EmailAlreadyExistedException();
+
+        customer.Update(firstname, lastname, dateOfBirth, phoneNumber, email, bankAccountNumber);
+    }
+
+    public void DeleteCustomer(CustomerId customerId)
+    {
+        Customer? customer = _customers.FirstOrDefault(x => x.Id == customerId);
+
+        if (customer is null)
+            throw new CustomerNotExistException();
+
+        _customers.Remove(customer);
+    }
+
 #pragma warning disable CS8618
     private Company() { }
 #pragma warning restore CS8618

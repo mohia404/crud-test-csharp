@@ -151,6 +151,9 @@ this.ScenarioInitialize(scenarioInfo);
 #line 12
  testRunner.When("i try to create customer", ((string)(null)), table2, "When ");
 #line hidden
+#line 15
+ testRunner.And("i try to get customers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
                 TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                             "first_name",
                             "last_name",
@@ -186,8 +189,8 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955563",
                             "mohia1377@gmail.com",
                             "123456789123456789123459"});
-#line 15
- testRunner.Then("the customers should be", ((string)(null)), table3, "Then ");
+#line 16
+ testRunner.Then("i should get following customers", ((string)(null)), table3, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -202,7 +205,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "create"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Operator creates customer with invalid phone number", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 22
+#line 23
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -250,7 +253,7 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955562",
                             "mohia1376@gmail.com",
                             "123456789123456789123458"});
-#line 23
+#line 24
  testRunner.Given("the following customers", ((string)(null)), table4, "Given ");
 #line hidden
                 TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
@@ -267,10 +270,10 @@ this.ScenarioInitialize(scenarioInfo);
                             "915895556",
                             "mohia1377@gmail.com",
                             "123456789123456789123459"});
-#line 28
+#line 29
  testRunner.When("i try to create customer", ((string)(null)), table5, "When ");
 #line hidden
-#line 31
+#line 32
  testRunner.Then("i should get invalid phone number error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -286,7 +289,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "create"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Operator creates customer with existing first name, last name and date of birth", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 34
+#line 35
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -334,7 +337,7 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955562",
                             "mohia1376@gmail.com",
                             "123456789123456789123458"});
-#line 35
+#line 36
  testRunner.Given("the following customers", ((string)(null)), table6, "Given ");
 #line hidden
                 TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
@@ -351,10 +354,10 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955560",
                             "mohia1377@gmail.com",
                             "52345678"});
-#line 40
+#line 41
  testRunner.When("i try to create customer", ((string)(null)), table7, "When ");
 #line hidden
-#line 43
+#line 44
  testRunner.Then("i should get customer exists error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -370,7 +373,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "create"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Operator creates customer with existing email", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 46
+#line 47
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -418,7 +421,7 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955562",
                             "mohia1376@gmail.com",
                             "123456789123456789123458"});
-#line 47
+#line 48
  testRunner.Given("the following customers", ((string)(null)), table8, "Given ");
 #line hidden
                 TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
@@ -435,10 +438,10 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955567",
                             "mohia1374@gmail.com",
                             "123456789123456789123450"});
-#line 52
+#line 53
  testRunner.When("i try to create customer", ((string)(null)), table9, "When ");
 #line hidden
-#line 55
+#line 56
  testRunner.Then("i should get email exists error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -454,7 +457,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "delete"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Operator delete customer that exists", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 58
+#line 59
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -502,11 +505,14 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955562",
                             "mohia1376@gmail.com",
                             "123456789123456789123458"});
-#line 59
+#line 60
  testRunner.Given("the following customers", ((string)(null)), table10, "Given ");
 #line hidden
-#line 64
+#line 65
  testRunner.When("i try to delete customer with email \'mohia1374@gmail.com\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 66
+ testRunner.And("i try to get customers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
                             "first_name",
@@ -529,8 +535,8 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955562",
                             "mohia1376@gmail.com",
                             "123456789123456789123458"});
-#line 65
- testRunner.Then("the customers should be", ((string)(null)), table11, "Then ");
+#line 67
+ testRunner.Then("i should get following customers", ((string)(null)), table11, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -545,7 +551,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "delete"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Operator delete customer that do not exists", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 71
+#line 73
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -593,13 +599,13 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955562",
                             "mohia1376@gmail.com",
                             "123456789123456789123458"});
-#line 72
+#line 74
  testRunner.Given("the following customers", ((string)(null)), table12, "Given ");
 #line hidden
-#line 77
+#line 79
  testRunner.When("i try to delete customer with email \'mohia1377@gmail.com\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 78
+#line 80
  testRunner.Then("i should get customer do not exist error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -615,7 +621,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "read"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Operator get customers", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 81
+#line 83
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -663,10 +669,10 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955562",
                             "mohia1376@gmail.com",
                             "123456789123456789123458"});
-#line 82
+#line 84
  testRunner.Given("the following customers", ((string)(null)), table13, "Given ");
 #line hidden
-#line 87
+#line 89
  testRunner.When("i try to get customers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
                 TechTalk.SpecFlow.Table table14 = new TechTalk.SpecFlow.Table(new string[] {
@@ -697,7 +703,7 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955562",
                             "mohia1376@gmail.com",
                             "123456789123456789123458"});
-#line 88
+#line 90
  testRunner.Then("i should get following customers", ((string)(null)), table14, "Then ");
 #line hidden
             }
@@ -713,7 +719,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "read"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Operator get existing customer", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 95
+#line 97
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -761,10 +767,10 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955562",
                             "mohia1376@gmail.com",
                             "123456789123456789123458"});
-#line 96
+#line 98
  testRunner.Given("the following customers", ((string)(null)), table15, "Given ");
 #line hidden
-#line 101
+#line 103
  testRunner.When("i try to get customer with email \'mohia1374@gmail.com\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
                 TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
@@ -781,21 +787,7 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955560",
                             "mohia1374@gmail.com",
                             "123456789123456789123456"});
-                table16.AddRow(new string[] {
-                            "amin",
-                            "mohammadi",
-                            "1996/05/22",
-                            "9158955561",
-                            "mohia1375@gmail.com",
-                            "123456789123456789123457"});
-                table16.AddRow(new string[] {
-                            "mohammadamin",
-                            "mohammadi",
-                            "1997/05/22",
-                            "9158955562",
-                            "mohia1376@gmail.com",
-                            "123456789123456789123458"});
-#line 102
+#line 104
  testRunner.Then("i should get following customer", ((string)(null)), table16, "Then ");
 #line hidden
             }
@@ -875,9 +867,12 @@ this.ScenarioInitialize(scenarioInfo);
                             "1995/05/22",
                             "9158955569",
                             "mohia1374@gmail.com",
-                            "12345679"});
+                            "123456789123456789123456"});
 #line 115
- testRunner.When("i try to update following customer", ((string)(null)), table18, "When ");
+ testRunner.When("i try to update following customer with email \'mohia1374@gmail.com\'", ((string)(null)), table18, "When ");
+#line hidden
+#line 118
+ testRunner.And("i try to get customers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table19 = new TechTalk.SpecFlow.Table(new string[] {
                             "first_name",
@@ -892,7 +887,7 @@ this.ScenarioInitialize(scenarioInfo);
                             "1995/05/22",
                             "9158955569",
                             "mohia1374@gmail.com",
-                            "12345679"});
+                            "123456789123456789123456"});
                 table19.AddRow(new string[] {
                             "amin",
                             "mohammadi",
@@ -907,8 +902,8 @@ this.ScenarioInitialize(scenarioInfo);
                             "9158955562",
                             "mohia1376@gmail.com",
                             "123456789123456789123458"});
-#line 118
- testRunner.Then("the customers should be", ((string)(null)), table19, "Then ");
+#line 119
+ testRunner.Then("i should get following customers", ((string)(null)), table19, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

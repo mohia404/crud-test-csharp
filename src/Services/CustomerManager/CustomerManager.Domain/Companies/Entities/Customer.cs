@@ -8,12 +8,12 @@ namespace CustomerManager.Domain.Companies.Entities;
 
 public class Customer : Entity<CustomerId>
 {
-    public string Firstname { get; }
-    public string Lastname { get; }
-    public DateTime DateOfBirth { get; }
-    public ulong PhoneNumber { get; }
-    public string Email { get; }
-    public string BankAccountNumber { get; }
+    public string Firstname { get; private set; }
+    public string Lastname { get; private set; }
+    public DateTime DateOfBirth { get; private set; }
+    public ulong PhoneNumber { get; private set; }
+    public string Email { get; private set; }
+    public string BankAccountNumber { get; private set; }
 
     private Customer(CustomerId id, string firstname, string lastname, DateTime dateOfBirth, ulong phoneNumber, string email, string bankAccountNumber) : base(id)
     {
@@ -32,6 +32,20 @@ public class Customer : Entity<CustomerId>
         CheckBankAccountNumber(bankAccountNumber);
 
         return new Customer(CustomerId.Create(Guid.NewGuid()), firstname, lastname, dateOfBirth, phoneNumber, email, bankAccountNumber);
+    }
+
+    public void Update(string firstname, string lastname, DateTime dateOfBirth, ulong phoneNumber, string email, string bankAccountNumber)
+    {
+        CheckPhoneNumber(phoneNumber.ToString());
+        CheckEmail(email);
+        CheckBankAccountNumber(bankAccountNumber);
+
+        Firstname = firstname;
+        Lastname = lastname;
+        DateOfBirth = dateOfBirth;
+        PhoneNumber = phoneNumber;
+        Email = email;
+        BankAccountNumber = bankAccountNumber;
     }
 
     private static void CheckPhoneNumber(string phoneNumber)

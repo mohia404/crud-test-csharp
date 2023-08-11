@@ -12,7 +12,8 @@ Scenario: Operator creates valid customer
 	When i try to create customer
 		| first_name   | last_name | date_of_birth | phone_number | email               | bank_account_number      |
 		| mohammadamin | amini     | 1998/05/22    | 9158955563   | mohia1377@gmail.com | 123456789123456789123459 |
-	Then the customers should be
+	And i try to get customers
+	Then i should get following customers
 		| first_name   | last_name | date_of_birth | phone_number | email               | bank_account_number      |
 		| mohammad     | amini     | 1995/05/22    | 9158955560   | mohia1374@gmail.com | 123456789123456789123456 |
 		| amin         | mohammadi | 1996/05/22    | 9158955561   | mohia1375@gmail.com | 123456789123456789123457 |
@@ -62,7 +63,8 @@ Scenario: Operator delete customer that exists
 		| amin         | mohammadi | 1996/05/22    | 9158955561   | mohia1375@gmail.com | 123456789123456789123457 |
 		| mohammadamin | mohammadi | 1997/05/22    | 9158955562   | mohia1376@gmail.com | 123456789123456789123458 |
 	When i try to delete customer with email 'mohia1374@gmail.com'
-	Then the customers should be
+	And i try to get customers
+	Then i should get following customers
 		| first_name   | last_name | date_of_birth | phone_number | email               | bank_account_number      |
 		| amin         | mohammadi | 1996/05/22    | 9158955561   | mohia1375@gmail.com | 123456789123456789123457 |
 		| mohammadamin | mohammadi | 1997/05/22    | 9158955562   | mohia1376@gmail.com | 123456789123456789123458 |
@@ -100,10 +102,8 @@ Scenario: Operator get existing customer
 		| mohammadamin | mohammadi | 1997/05/22    | 9158955562   | mohia1376@gmail.com | 123456789123456789123458 |
 	When i try to get customer with email 'mohia1374@gmail.com'
 	Then i should get following customer
-		| first_name   | last_name | date_of_birth | phone_number | email               | bank_account_number      |
-		| mohammad     | amini     | 1995/05/22    | 9158955560   | mohia1374@gmail.com | 123456789123456789123456 |
-		| amin         | mohammadi | 1996/05/22    | 9158955561   | mohia1375@gmail.com | 123456789123456789123457 |
-		| mohammadamin | mohammadi | 1997/05/22    | 9158955562   | mohia1376@gmail.com | 123456789123456789123458 |
+		| first_name | last_name | date_of_birth | phone_number | email               | bank_account_number      |
+		| mohammad   | amini     | 1995/05/22    | 9158955560   | mohia1374@gmail.com | 123456789123456789123456 |
 
 @update
 Scenario: Operator update existing customer
@@ -112,11 +112,12 @@ Scenario: Operator update existing customer
 		| mohammad     | amini     | 1995/05/22    | 9158955560   | mohia1374@gmail.com | 123456789123456789123456 |
 		| amin         | mohammadi | 1996/05/22    | 9158955561   | mohia1375@gmail.com | 123456789123456789123457 |
 		| mohammadamin | mohammadi | 1997/05/22    | 9158955562   | mohia1376@gmail.com | 123456789123456789123458 |
-	When i try to update following customer
-		| first_name | last_name | date_of_birth | phone_number | email               | bank_account_number |
-		| hasan      | hasani    | 1995/05/22    | 9158955569   | mohia1374@gmail.com | 12345679            |
-	Then the customers should be
+	When i try to update following customer with email 'mohia1374@gmail.com'
+		| first_name | last_name | date_of_birth | phone_number | email               | bank_account_number      |
+		| hasan      | hasani    | 1995/05/22    | 9158955569   | mohia1374@gmail.com | 123456789123456789123456 |
+	And i try to get customers
+	Then i should get following customers
 		| first_name   | last_name | date_of_birth | phone_number | email               | bank_account_number      |
-		| hasan        | hasani    | 1995/05/22    | 9158955569   | mohia1374@gmail.com | 12345679                 |
+		| hasan        | hasani    | 1995/05/22    | 9158955569   | mohia1374@gmail.com | 123456789123456789123456 |
 		| amin         | mohammadi | 1996/05/22    | 9158955561   | mohia1375@gmail.com | 123456789123456789123457 |
 		| mohammadamin | mohammadi | 1997/05/22    | 9158955562   | mohia1376@gmail.com | 123456789123456789123458 |
