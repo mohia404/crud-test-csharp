@@ -2,8 +2,8 @@ using BoDi;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Phonebook.Infrastructure.Data;
 using System.Net;
+using CustomerManager.Infrastructure.Data;
 
 namespace Mc2.CrudTest.AcceptanceTests.Steps;
 
@@ -11,15 +11,15 @@ namespace Mc2.CrudTest.AcceptanceTests.Steps;
 public class CustomerManagerStepDefinitions
 {
     private readonly ScenarioContext _scenarioContext;
-    public PhonebookApplicationFactory _factory = new();
+    public CustomerManagerApplicationFactory _factory = new();
     public HttpClient _client { get; set; } = null!;
-    private readonly PhonebookDbContext _databaseContext;
+    private readonly CustomerManagerDbContext _databaseContext;
 
     public CustomerManagerStepDefinitions(ScenarioContext scenarioContext)
     {
         _scenarioContext = scenarioContext;
         var scope = _factory.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
-        _databaseContext = scope.ServiceProvider.GetRequiredService<PhonebookDbContext>();
+        _databaseContext = scope.ServiceProvider.GetRequiredService<CustomerManagerDbContext>();
     }
 
     [BeforeScenario]
