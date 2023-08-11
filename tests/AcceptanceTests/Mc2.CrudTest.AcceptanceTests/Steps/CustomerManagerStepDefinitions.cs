@@ -12,6 +12,8 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using TechTalk.SpecFlow.Assist;
+using System.Linq;
+using Mc2.CrudTest.AcceptanceTests.Drivers.Http;
 
 namespace Mc2.CrudTest.AcceptanceTests.Steps;
 
@@ -81,6 +83,10 @@ public class CustomerManagerStepDefinitions
     [Then(@"the customers should be")]
     public async Task ThenTheCustomersShouldBe(Table table)
     {
+        HttpResponseMessage? response = _scenarioContext["response"] as HttpResponseMessage;
+        response.Should().NotBeNull();
+        response!.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
         Company company = await _databaseContext.Companies.FirstAsync(x => x.Id == _companyId);
 
         List<CustomerRow> expectedCustomers = table.CreateSet<CustomerRow>().ToList();
@@ -95,18 +101,36 @@ public class CustomerManagerStepDefinitions
     }
 
     [Then(@"i should get invalid phone number error")]
-    public void ThenIShouldGetInvalidPhoneNumberError()
+    public async Task ThenIShouldGetInvalidPhoneNumberError()
     {
+        HttpResponseMessage? response = _scenarioContext["response"] as HttpResponseMessage;
+
+        response.Should().NotBeNull();
+        response!.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        await CheckValidationErrorAsync(response, "Customer.InvalidPhoneNumber");
     }
 
     [Then(@"i should get customer exists error")]
-    public void ThenIShouldGetCustomerExistsError()
+    public async Task ThenIShouldGetCustomerExistsError()
     {
+        HttpResponseMessage? response = _scenarioContext["response"] as HttpResponseMessage;
+
+        response.Should().NotBeNull();
+        response!.StatusCode.Should().Be(HttpStatusCode.Conflict);
+
+        await CheckErrorAsync(response, "Customer.NameAndBirthConflict");
     }
 
     [Then(@"i should get email exists error")]
-    public void ThenIShouldGetEmailExistsError()
+    public async Task ThenIShouldGetEmailExistsError()
     {
+        HttpResponseMessage? response = _scenarioContext["response"] as HttpResponseMessage;
+
+        response.Should().NotBeNull();
+        response!.StatusCode.Should().Be(HttpStatusCode.Conflict);
+
+        await CheckErrorAsync(response, "Customer.EmailConflict");
     }
 
     [When(@"i try to delete customer with email '([^']*)'")]
@@ -166,5 +190,50 @@ public class CustomerManagerStepDefinitions
     private static StringContent ToJson(object obj)
     {
         return new StringContent(JsonSerializer.Serialize(obj), Encoding.UTF8, "application/json");
+    }
+
+    private async Task CheckResponseErrorAsync(HttpResponseMessage result, ProblemDetailsWithErrors problemDetailsWithErrors)
+    {
+        JsonSerializerOptions options = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
+        string output = await result.Content.ReadAsStringAsync();
+
+        ProblemDetailsWithErrors? error = JsonSerializer.Deserialize<ProblemDetailsWithErrors>(output, options);
+
+        error.Should().NotBeNull();
+        error!.Should().BeEquivalentTo(problemDetailsWithErrors);
+    }
+
+    private static async Task CheckValidationErrorAsync(HttpResponseMessage response, string error)
+    {
+        JsonSerializerOptions options = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
+        string output = await response.Content.ReadAsStringAsync();
+
+        ValidationProblemDetailsWithErrors? validationError = JsonSerializer.Deserialize<ValidationProblemDetailsWithErrors>(output, options);
+
+        validationError.Should().NotBeNull();
+        validationError!.Errors.Select(x => x.Key).Should().Contain(error);
+    }
+
+    private static async Task CheckErrorAsync(HttpResponseMessage response, string error)
+    {
+        JsonSerializerOptions options = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
+        string output = await response.Content.ReadAsStringAsync();
+
+        ProblemDetailsWithErrors? validationError = JsonSerializer.Deserialize<ProblemDetailsWithErrors>(output, options);
+
+        validationError.Should().NotBeNull();
+        validationError!.ErrorCodes.Should().Contain(error);
     }
 }

@@ -9,6 +9,7 @@
 	<ItemGroup>
 		<PackageReference Include="ErrorOr" Version="1.2.1" />
 		<PackageReference Include="MediatR" Version="12.1.1" />
+		<PackageReference Include="libphonenumber-csharp" Version="8.13.18" />
 	</ItemGroup>
 
 </Project>

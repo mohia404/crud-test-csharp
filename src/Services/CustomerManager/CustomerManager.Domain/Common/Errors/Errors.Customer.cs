@@ -21,5 +21,13 @@ public static partial class Errors
         public static Error InvalidPhoneNumber => Error.Validation(
             code: "Customer.InvalidPhoneNumber",
             description: "Customer phone number is not valid.");
+
+        public static Error InvalidEmail => Error.Validation(
+            code: "Customer.InvalidEmail",
+            description: "Customer email is not valid.");
+
+        public static Error InvalidBankAccountNumber => Error.Validation(
+            code: "Customer.InvalidBankAccountNumber",
+            description: "Customer Bank Account Number is not valid.");
     }
 }
