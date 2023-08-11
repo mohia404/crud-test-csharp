@@ -60,6 +60,6 @@ public class CustomerService
     {
         _logger.LogInformation("Delete Customer {email}", email);
 
-        return await _httpService.HttpDeleteAsync(_baseAddress + "customers/", email);
+        return await _httpService.HttpDeleteAsync(_baseAddress + "customers", email);
     }
 }

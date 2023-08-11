@@ -9,12 +9,10 @@ public class HttpService
 {
     private readonly HttpClient _httpClient;
     private readonly string _apiUrl;
-    private readonly ILogger<HttpService> _logger;
     private readonly IToastService _toastService;
 
-    public HttpService(IHttpClientFactory httpClientFactory, ILogger<HttpService> logger, IToastService toastService)
+    public HttpService(IHttpClientFactory httpClientFactory, IToastService toastService)
     {
-        _logger = logger;
         _toastService = toastService;
         _httpClient = httpClientFactory.CreateClient("backend");
         _apiUrl = _httpClient.BaseAddress + "api/";
@@ -125,7 +123,7 @@ public class HttpService
             return false;
         }
 
-        _toastService.ShowSuccess("ویرایش با موفقیت انجام شد");
+        _toastService.ShowSuccess("The update operation completed successfully.");
 
         return true;
     }

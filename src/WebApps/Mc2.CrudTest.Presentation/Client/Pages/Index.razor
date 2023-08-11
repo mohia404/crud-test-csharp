@@ -1,8 +1,91 @@
 ﻿@page "/"
+@using Syncfusion.Blazor.Navigations
 
-<PageTitle>Index</PageTitle>
+@inject CustomerService CustomerService
 
-<h1>Hello, world!</h1>
+<PageTitle>Customer Manager</PageTitle>
 
-Welcome to your new app.
+<h1>Customer Manager</h1>
 
+<SfGrid @ref="Grid" DataSource="@Customers" Toolbar="_toolbarItems" TValue="CustomerDto" AllowPaging="true" AllowSorting="true">
+    <GridPageSettings PageSizes="true"></GridPageSettings>
+    <GridSearchSettings Fields="@(new[] { nameof(CustomerDto.Firstname), nameof(CustomerDto.Lastname), nameof(CustomerDto.Email), nameof(CustomerDto.PhoneNumber)})"></GridSearchSettings>
+    <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Dialog">
+    </GridEditSettings>
+    <GridEvents OnActionBegin="ActionBeginHandler" OnActionComplete="ActionCompleteHandler" OnToolbarClick="ToolbarClickHandler" TValue="CustomerDto"></GridEvents>
+    <GridColumns>
+        <GridColumn Field="@nameof(CustomerDto.Firstname)" Width="150" TextAlign="TextAlign.Center"></GridColumn>
+        <GridColumn Field="@nameof(CustomerDto.Lastname)" Width="150" TextAlign="TextAlign.Center"></GridColumn>
+        <GridColumn Field="@nameof(CustomerDto.DateOfBirth)" Width="150" TextAlign="TextAlign.Center"></GridColumn>
+        <GridColumn Field="@nameof(CustomerDto.PhoneNumber)" Width="150" TextAlign="TextAlign.Center"></GridColumn>
+        <GridColumn Field="@nameof(CustomerDto.Email)" Width="150" TextAlign="TextAlign.Center" IsPrimaryKey="true"></GridColumn>
+        <GridColumn Field="@nameof(CustomerDto.BankAccountNumber)" Width="150" TextAlign="TextAlign.Center"></GridColumn>
+    </GridColumns>
+</SfGrid>
+
+@code
+{
+    private readonly List<object> _toolbarItems = new() { "Add", "Edit", "Delete", new ItemModel() { Text = "", TooltipText = "Refresh", PrefixIcon = "e-icons e-refresh", Id = "Refresh" }, "Search" };
+    public List<CustomerDto>? Customers { get; set; }
+    SfGrid<CustomerDto> Grid { get; set; } = null!;
+    public string Header { get; set; } = null!;
+    public string ButtonText { get; set; } = null!;
+
+    public async Task Cancel()
+    {
+        await Grid.CloseEditAsync();     //Cancel editing action
+    }
+
+    public async Task Save()
+    {
+        await Grid.EndEditAsync();       //Save the edited/added data to Grid
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshAsync();
+    }
+
+    public async Task ActionBeginHandler(ActionEventArgs<CustomerDto> args)
+    {
+        switch (args.RequestType)
+        {
+            case Syncfusion.Blazor.Grids.Action.Save when args.Action == "Add":
+                bool createResult = await CustomerService.CreateAsync(args.Data);
+                if (!createResult)
+                    args.Cancel = true;
+                break;
+            case Syncfusion.Blazor.Grids.Action.Save:
+                bool updateResult = await CustomerService.UpdateAsync(args.Data.Email, args.Data);
+                if (!updateResult)
+                    args.Cancel = true;
+                break;
+            case Syncfusion.Blazor.Grids.Action.Delete:
+                bool deleteResult = await CustomerService.DeleteAsync(args.Data.Email);
+                if (!deleteResult)
+                    args.Cancel = true;
+                break;
+        }
+    }
+
+    public async Task ToolbarClickHandler(ClickEventArgs args)
+    {
+        if (args.Item.Id == "Refresh")
+        {
+            await RefreshAsync();
+        }
+    }
+
+    public async Task ActionCompleteHandler(ActionEventArgs<CustomerDto> args)
+    {
+        if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+        {
+            await RefreshAsync();
+        }
+    }
+
+    private async Task RefreshAsync()
+    {
+        Customers = await CustomerService.ListAsync();
+    }
+}
