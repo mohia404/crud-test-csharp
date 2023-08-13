@@ -33,7 +33,7 @@ public class CustomerManagerDbContextSeed
                 Company company = Company.Create(CompanyId.Create(new Guid("64f3573b-d584-4c36-9119-906e756c24ce")));
 
                 // for test purpose
-                company.AddNewCustomer("Mohammad", "Amini", DateTime.Now, 9158955560, "mohia1374@gmail.com", "12345");
+                company.AddNewCustomer("Mohammad", "Amini", DateTime.Now, 9158955560, "mohia1374@gmail.com", "123456789123456789123456");
 
                 await _context.Companies.AddAsync(company);
             }

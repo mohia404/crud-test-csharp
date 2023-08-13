@@ -27,7 +27,7 @@ namespace Mc2.CrudTest.Presentation.Server
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();

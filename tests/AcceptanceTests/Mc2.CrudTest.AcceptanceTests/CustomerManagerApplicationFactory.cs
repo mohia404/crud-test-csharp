@@ -20,7 +20,8 @@ public class CustomerManagerApplicationFactory : WebApplicationFactory<CustomerM
                 d => d.ServiceType ==
                      typeof(DbContextOptions<CustomerManagerDbContext>));
 
-            services.Remove(dbContextDescriptor);
+            if (dbContextDescriptor != null)
+                services.Remove(dbContextDescriptor);
 
             services.AddDbContext<CustomerManagerDbContext>(options =>
             {

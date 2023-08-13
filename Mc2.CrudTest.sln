@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerManager.Domain", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerManager.Infrastructure", "src\Services\CustomerManager\CustomerManager.Infrastructure\CustomerManager.Infrastructure.csproj", "{65D8692D-B91E-49F2-9AC2-507591D4477B}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AC90A06D-E577-4936-AA95-D7330CFA0325}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{65D8692D-B91E-49F2-9AC2-507591D4477B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65D8692D-B91E-49F2-9AC2-507591D4477B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65D8692D-B91E-49F2-9AC2-507591D4477B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC90A06D-E577-4936-AA95-D7330CFA0325}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC90A06D-E577-4936-AA95-D7330CFA0325}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC90A06D-E577-4936-AA95-D7330CFA0325}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC90A06D-E577-4936-AA95-D7330CFA0325}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

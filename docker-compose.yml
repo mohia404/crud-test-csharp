@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  sqldb:
+    image: mcr.microsoft.com/mssql/server
+
+  customermanager.api:
+    image: ${DOCKER_REGISTRY-}customermanagerapi
+    build:
+      context: .
+      dockerfile: src/Services/CustomerManager/CustomerManager.API/Dockerfile
+
+  mc2.crudtest.presentation.server:
+    image: ${DOCKER_REGISTRY-}mc2crudtestpresentationserver
+    build:
+      context: .
+      dockerfile: src/WebApps/Mc2.CrudTest.Presentation/Server/Dockerfile
+
+volumes:
+  sqlserver:
+    driver: local

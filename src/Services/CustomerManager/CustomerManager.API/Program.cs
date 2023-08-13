@@ -57,9 +57,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseExceptionHandler("/error");
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 
