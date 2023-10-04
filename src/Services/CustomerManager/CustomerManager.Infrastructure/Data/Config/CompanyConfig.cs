@@ -42,7 +42,14 @@ public class CompanyConfig : IEntityTypeConfiguration<Company>
                     .ValueGeneratedNever()
                     .HasConversion(
                         id => id.Value,
-                        value => CustomerId.Create(value));
+                        value => CustomerId.Create(value));  
+                
+                customerBuilder
+                    .Property(d => d.PhoneNumber)
+                    .ValueGeneratedNever()
+                    .HasConversion(
+                        id => id.Value,
+                        value => CustomerPhoneNumber.Create(value));
 
                 customerBuilder
                     .WithOwner()
@@ -65,7 +72,7 @@ public class CompanyConfig : IEntityTypeConfiguration<Company>
 
                 customerBuilder
                     .Property(x => x.PhoneNumber)
-                    .HasColumnType("bigint");
+                    .HasMaxLength(20);
 
                 customerBuilder
                     .Property(x => x.Email)

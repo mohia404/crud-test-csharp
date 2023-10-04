@@ -1,6 +1,7 @@
 ﻿using CustomerManager.Application.Common.Interfaces.Persistence;
 using CustomerManager.Domain.Common.Errors;
 using CustomerManager.Domain.Companies;
+using CustomerManager.Domain.Companies.ValueObjects;
 using ErrorOr;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -27,12 +28,7 @@ public class AddNewCustomerCommandHandler : IRequestHandler<AddNewCustomerComman
         if (company is null)
             return Errors.Company.NotFound;
 
-        bool isPhoneNumberValid = ulong.TryParse(request.PhoneNumber, out ulong ulongPhoneNumber);
-
-        if (!isPhoneNumberValid)
-            return Errors.Customer.InvalidPhoneNumber;
-
-        company.AddNewCustomer(request.Firstname, request.Lastname, request.DateOfBirth, ulongPhoneNumber, request.Email, request.BankAccountNumber);
+        company.AddNewCustomer(request.Firstname, request.Lastname, request.DateOfBirth, (CustomerPhoneNumber)request.PhoneNumber, request.Email, request.BankAccountNumber);
 
         _logger.LogInformation("Create New Customer for {companyId}: {firstName} {lastName}, {email}",
             company.Id,

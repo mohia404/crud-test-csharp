@@ -63,7 +63,7 @@ public class CustomerManagerStepDefinitions
             company.AddNewCustomer(givenCustomer.Firstname,
                 givenCustomer.Lastname,
                 givenCustomer.DateOfBirth,
-                ulong.Parse(givenCustomer.PhoneNumber),
+                (CustomerPhoneNumber)givenCustomer.PhoneNumber, 
                 givenCustomer.Email,
                 givenCustomer.BankAccountNumber);
         }

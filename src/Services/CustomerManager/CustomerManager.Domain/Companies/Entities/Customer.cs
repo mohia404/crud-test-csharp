@@ -1,7 +1,6 @@
 ﻿using CustomerManager.Domain.Common.Models;
 using CustomerManager.Domain.Companies.Exceptions;
 using CustomerManager.Domain.Companies.ValueObjects;
-using PhoneNumbers;
 using System.Net.Mail;
 
 namespace CustomerManager.Domain.Companies.Entities;
@@ -11,11 +10,11 @@ public class Customer : Entity<CustomerId>
     public string Firstname { get; private set; }
     public string Lastname { get; private set; }
     public DateTime DateOfBirth { get; private set; }
-    public ulong PhoneNumber { get; private set; }
+    public CustomerPhoneNumber PhoneNumber { get; private set; }
     public string Email { get; private set; }
     public string BankAccountNumber { get; private set; }
 
-    private Customer(CustomerId id, string firstname, string lastname, DateTime dateOfBirth, ulong phoneNumber, string email, string bankAccountNumber) : base(id)
+    private Customer(CustomerId id, string firstname, string lastname, DateTime dateOfBirth, CustomerPhoneNumber phoneNumber, string email, string bankAccountNumber) : base(id)
     {
         Firstname = firstname;
         Lastname = lastname;
@@ -25,18 +24,16 @@ public class Customer : Entity<CustomerId>
         BankAccountNumber = bankAccountNumber;
     }
 
-    public static Customer Create(string firstname, string lastname, DateTime dateOfBirth, ulong phoneNumber, string email, string bankAccountNumber)
+    public static Customer Create(string firstname, string lastname, DateTime dateOfBirth, CustomerPhoneNumber phoneNumber, string email, string bankAccountNumber)
     {
-        CheckPhoneNumber(phoneNumber.ToString());
         CheckEmail(email);
         CheckBankAccountNumber(bankAccountNumber);
 
         return new Customer(CustomerId.Create(Guid.NewGuid()), firstname, lastname, dateOfBirth, phoneNumber, email, bankAccountNumber);
     }
 
-    public void Update(string firstname, string lastname, DateTime dateOfBirth, ulong phoneNumber, string email, string bankAccountNumber)
+    public void Update(string firstname, string lastname, DateTime dateOfBirth, CustomerPhoneNumber phoneNumber, string email, string bankAccountNumber)
     {
-        CheckPhoneNumber(phoneNumber.ToString());
         CheckEmail(email);
         CheckBankAccountNumber(bankAccountNumber);
 
@@ -46,21 +43,6 @@ public class Customer : Entity<CustomerId>
         PhoneNumber = phoneNumber;
         Email = email;
         BankAccountNumber = bankAccountNumber;
-    }
-
-    private static void CheckPhoneNumber(string phoneNumber)
-    {
-        try
-        {
-            PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.GetInstance();
-            PhoneNumber phoneNumberLib = phoneNumberUtil.Parse(phoneNumber, "IR");
-            if (!phoneNumberUtil.IsValidNumber(phoneNumberLib))
-                throw new InvalidPhoneNumberException();
-        }
-        catch (NumberParseException)
-        {
-            throw new InvalidPhoneNumberException();
-        }
     }
 
     private static void CheckEmail(string email)

@@ -20,7 +20,7 @@ public class Company : AggregateRoot<CompanyId, Guid>
         return new Company(id);
     }
 
-    public void AddNewCustomer(string firstname, string lastname, DateTime dateOfBirth, ulong phoneNumber, string email, string bankAccountNumber)
+    public void AddNewCustomer(string firstname, string lastname, DateTime dateOfBirth, CustomerPhoneNumber phoneNumber, string email, string bankAccountNumber)
     {
         if (_customers.Any(x => x.Firstname == firstname && x.Lastname == lastname && x.DateOfBirth == dateOfBirth))
             throw new NameAndBirthAlreadyExistedException();
@@ -32,7 +32,7 @@ public class Company : AggregateRoot<CompanyId, Guid>
         _customers.Add(customer);
     }
 
-    public void UpdateCustomer(CustomerId customerId, string firstname, string lastname, DateTime dateOfBirth, ulong phoneNumber, string email, string bankAccountNumber)
+    public void UpdateCustomer(CustomerId customerId, string firstname, string lastname, DateTime dateOfBirth, CustomerPhoneNumber phoneNumber, string email, string bankAccountNumber)
     {
         Customer? customer = _customers.FirstOrDefault(x => x.Id == customerId);
 

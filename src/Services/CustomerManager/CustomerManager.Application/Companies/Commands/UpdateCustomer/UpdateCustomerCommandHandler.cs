@@ -2,6 +2,7 @@
 using CustomerManager.Domain.Common.Errors;
 using CustomerManager.Domain.Companies;
 using CustomerManager.Domain.Companies.Entities;
+using CustomerManager.Domain.Companies.ValueObjects;
 using ErrorOr;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -33,12 +34,7 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
         if (customer is null)
             return Errors.Customer.NotFound;
 
-        bool isPhoneNumberValid = ulong.TryParse(request.PhoneNumber, out ulong ulongPhoneNumber);
-
-        if (!isPhoneNumberValid)
-            return Errors.Customer.InvalidPhoneNumber;
-
-        company.UpdateCustomer(customer.Id, request.Firstname, request.Lastname, request.DateOfBirth, ulongPhoneNumber, request.Email, request.BankAccountNumber);
+        company.UpdateCustomer(customer.Id, request.Firstname, request.Lastname, request.DateOfBirth, (CustomerPhoneNumber)request.PhoneNumber, request.Email, request.BankAccountNumber);
 
         _logger.LogInformation("Update Customer in {companyId} with email: {customerEmail} to: {firstName} {lastName}, {email}",
             company.Id,
