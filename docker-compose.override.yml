@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  sqldb:
+    container_name: sqldb
+    environment:
+        SA_PASSWORD: "yourStrong(!)Password"
+        ACCEPT_EULA: "Y"
+    restart: always
+    ports:
+        - "1435:1433"
+    #volumes:
+    #  - sqlserver:/var/opt/mssql
+
+  customermanager.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:DefaultConnection=Data Source=sqldb;User ID=sa;Password=yourStrong(!)Password;Initial Catalog=CustomerManagerDb;TrustServerCertificate=True"
+    ports:
+        - "7010:80"
+    depends_on:
+        - sqldb    
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  mc2.crudtest.presentation.server:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+        - "7045:80"
+    depends_on:
+        - customermanager.api
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
